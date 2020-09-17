@@ -1,0 +1,14 @@
+{
+    "ph312375": {
+        "has_chunks": true,
+        "local_path": "normalized/ph312375.txt",
+        "url": "https://epigraphy.packhum.org/text/312378",
+        "chunk_separator": "\n"
+    },
+    "ph260828": {
+        "has_chunks": true,
+        "local_path": "normalized/ph260828.txt",
+        "url": "https://epigraphy.packhum.org/text/260828",
+        "chunk_separator": "\n"
+    }
+}
