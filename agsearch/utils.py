@@ -31,7 +31,7 @@ def read_json(path) -> Union[dict, list]:
 
 def write_json(path, f: Union[dict, list]) -> None:
     with open(path, "w", encoding="utf-8") as ff:
-        json.dump(f, ff, ensure_ascii=False)
+        json.dump(f, ff, ensure_ascii=False, indent=2)
 
 
 def is_dict(el: Union[dict, list]) -> dict:

@@ -6,15 +6,17 @@ New text procedure
 import argparse
 from agsearch.smanager import SearchManager
 from agsearch.corpusmanager import CorpusManager
+import sys
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Ancient Greek Search Engine")
     parser.add_argument(
         "update",
-        help="update term info before proceeding with search",
-        type=bool,
-        choices=[0, 1],
+        help="update term info before proceeding with search"
+        + " 0 not update, 1 update, 2 just update",
+        type=int,
+        choices=[0, 1, 2],
     )
     parser.add_argument(
         "filepath",
@@ -27,7 +29,10 @@ if __name__ == "__main__":
         type=int,
     )
     args = parser.parse_args()
-    if args.update:
+    if args.update == 1:
         cmanager = CorpusManager()
+    elif args.update == 2:
+        cmanager = CorpusManager()
+        sys.exit(0)
     manager = SearchManager(args.filepath, choice=args.searcher)
     manager.search()
