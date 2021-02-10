@@ -1,13 +1,20 @@
+"""!
+\file scoreinfo.py
+
+Score info data base member
+"""
 # manager for score info db
-from typing import List, Dict
+from typing import List, Dict, Optional
 import os
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 from agsearch.utils import get_text_info_db
 from agsearch.utils import add_to_score_info_db
 from agsearch.utils import DATA_DIR
 from agsearch.text import Text
+from agsearch.textinfo import TextInfo
 from agsearch.terminfo import TermInfo
 from agsearch.searcher import Searcher
 
@@ -21,28 +28,35 @@ class ScoreInfo(Searcher):
         """!
         \brief Constructor for a score info database member
 
-        \var self.path path to the term file
-        \var self.infos text info database
-        \var self.tfidfvec term frequency inverse document frequency vector.
-        \var self.score_infos score info dict representation.
-        \var self.tf_matrix term frequency inverse document frequency matrix.
+        self.tf_matrix term frequency inverse document frequency matrix.
         """
-        self.path = termfile
-        self.infos = get_text_info_db()
-        self.tfidfvec = None
+        ## path path to the term file
+        self.path: str = termfile
+
+        ## infos text info database
+        self.infos: TextInfo = get_text_info_db()
+
+        ## term frequency inverse document frequency vector.
+        self.tfidfvec: np.ndarray = None
+
+        ## score info dict representation.
         self.score_infos: Dict[str, float] = {}
-        self.tf_matrix = None
-        self.search_results = None
+
+        ## term frequency inverse document frequency matrix
+        self.tf_matrix: Optional[np.ndarray] = None
+        self.search_results: np.ndarray = None
 
     @property
-    def search_terms(self):
+    def search_terms(self) -> str:
         """!
         \brief Obtain search terms from given path
+
+        We assume that search terms are inside the file pointed by the path.
         """
         with open(self.path, "r", encoding="utf-8") as f:
             return f.read()
 
-    def scores(self):
+    def scores(self) -> np.ndarray:
         """!
         \brief compute cosine similarity in tf-idf matrix
 
@@ -53,9 +67,14 @@ class ScoreInfo(Searcher):
         sim_scores = sim_scores[1:]
         return sim_scores
 
-    def save_results(self):
+    def save_results(self) -> None:
         """!
         \brief save result to score info database
+
+        For each text id from text infos we obtain the score of the given text
+        then save it to score info dict which is then added to score info
+        database.
+
         """
         score_id = []
         for text_id in self.infos.keys():
@@ -67,9 +86,22 @@ class ScoreInfo(Searcher):
         score_info = {"terms": self.search_terms, "docs": score_id}
         add_to_score_info_db(score_info)
 
-    def search(self):
+    def search(self) -> None:
         """!
         \brief  compute cosine scores of search terms
+
+        First we create the vectorizer, then from text infos we obtain local
+        paths to the texts. From text identifiers we create a place for all the
+        texts inside score info database. Then we add search terms and 
+        create tf-idf matrix. We then proceed to compute scores for each term.
+
+        \code
+
+        >>> my_term_file = "~/somegreektext.txt" # contains search terms
+        >>> sinfo = ScoreInfo(my_term_file)
+        >>> sinfo.search()
+
+        \endcode 
         """
         self.tfidfvec = TfidfVectorizer(
             input="filename",

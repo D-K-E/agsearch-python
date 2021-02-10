@@ -35,6 +35,8 @@ If you are not using conda, there are two main dependencies:
 
 - `numpy`
 
+- `cltk`
+
 
 ## Intended Public and Usage
 
