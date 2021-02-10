@@ -13,7 +13,20 @@ from agsearch.searcher import Searcher
 
 
 class ScoreInfo(Searcher):
+    """!
+    \brief represents a member of score info database.
+    """
+
     def __init__(self, termfile: str):
+        """!
+        \brief Constructor for a score info database member
+
+        \var self.path path to the term file
+        \var self.infos text info database
+        \var self.tfidfvec term frequency inverse document frequency vector.
+        \var self.score_infos score info dict representation.
+        \var self.tf_matrix term frequency inverse document frequency matrix.
+        """
         self.path = termfile
         self.infos = get_text_info_db()
         self.tfidfvec = None
@@ -23,17 +36,27 @@ class ScoreInfo(Searcher):
 
     @property
     def search_terms(self):
+        """!
+        \brief Obtain search terms from given path
+        """
         with open(self.path, "r", encoding="utf-8") as f:
             return f.read()
 
     def scores(self):
+        """!
+        \brief compute cosine similarity in tf-idf matrix
+
+        \return np.ndarray
+        """
         sim_scores = cosine_similarity(self.tf_matrix[0], self.tf_matrix)
         sim_scores = sim_scores.reshape((-1))
         sim_scores = sim_scores[1:]
         return sim_scores
 
     def save_results(self):
-        ""
+        """!
+        \brief save result to score info database
+        """
         score_id = []
         for text_id in self.infos.keys():
             index = self.score_infos.pop(text_id)
@@ -45,7 +68,9 @@ class ScoreInfo(Searcher):
         add_to_score_info_db(score_info)
 
     def search(self):
-        ""
+        """!
+        \brief  compute cosine scores of search terms
+        """
         self.tfidfvec = TfidfVectorizer(
             input="filename",
             preprocessor=Text.clean_text,

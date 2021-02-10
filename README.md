@@ -1,4 +1,5 @@
-# agsearch-python
+# agsearch
+
 A Very Simple Command Line Based Ancient Greek Search Engine in Python 
 
 There are mainly two features in this engine:
