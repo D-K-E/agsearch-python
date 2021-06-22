@@ -86,24 +86,42 @@ def save_tfidf_info_db(f: list) -> None:
 
 def update_term_info_db(info: dict) -> None:
     term_info = get_term_info_db()
+    is_dict(info)
     term_info.update(info)
     save_term_info_db(term_info)
 
 
 def update_text_info_db(info: dict) -> None:
     text_info = get_text_info_db()
+    is_dict(info)
+    text_info.update(info)
+    save_text_info_db(text_info)
+
+
+def add_to_text_info_db(info: dict) -> None:
+    ""
+    text_info = get_text_info_db()
+    is_dict(info)
+    ks = list(info.keys())
+    for text_id in ks:
+        if text_id in text_info:
+            raise ValueError(
+                "the textinfo database already contains the text id: " + str(text_id)
+            )
     text_info.update(info)
     save_text_info_db(text_info)
 
 
 def add_to_score_info_db(info: dict) -> None:
     score_info_db = get_score_info_db()
+    is_dict(info)
     score_info_db.append(info)
     save_score_info_db(score_info_db)
 
 
 def add_to_tfidf_info_db(info: dict) -> None:
     tfidf_info_db = get_tfidf_info_db()
+    is_dict(info)
     tfidf_info_db.append(info)
     save_tfidf_info_db(tfidf_info_db)
 

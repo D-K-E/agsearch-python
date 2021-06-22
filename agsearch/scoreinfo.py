@@ -13,7 +13,7 @@ import numpy as np
 from agsearch.utils import get_text_info_db
 from agsearch.utils import add_to_score_info_db
 from agsearch.utils import DATA_DIR
-from agsearch.text import Text
+from agsearch.greekprocessing import clean_greek_text
 from agsearch.textinfo import TextInfo
 from agsearch.terminfo import TermInfo
 from agsearch.searcher import Searcher
@@ -105,7 +105,7 @@ class ScoreInfo(Searcher):
         """
         self.tfidfvec = TfidfVectorizer(
             input="filename",
-            preprocessor=Text.clean_text,
+            preprocessor=clean_greek_text,
             use_idf=True,
             smooth_idf=True,
         )

@@ -1,7 +1,7 @@
 """!
-\file text.py
+\file greektext.py
 
-Represents a brut text object. Text is considered at document level
+Represents a brut greek text object. Greek Text is considered at document level
 """
 # simple text object
 
@@ -14,13 +14,13 @@ from agsearch.textinfo import TextInfo
 from agsearch.terminfo import TermInfo
 from agsearch.utils import DATA_DIR
 from agsearch.utils import PUNCTUATIONS
-from agsearch.preprocessing import Preprocessing
+from agsearch.greekprocessing import GreekProcessing
 from greek_accentuation.characters import base
 from cltk.stop.greek.stops import STOPS_LIST
 from cltk.corpus.greek.alphabet import filter_non_greek
 
 
-class Text:
+class GreekText:
     """!
     \brief Document object that contains text string
     """
@@ -80,18 +80,18 @@ class Text:
         """
         text_id = info.text_id
         text_path = os.path.join(DATA_DIR, info.local_path)
-        text: str = Preprocessing.read(text_path)
-        procs = Preprocessing(text)
-        text = procs.clean_text(text)
+        text: str = GreekProcessing.read_text(text_path)
+        greek_processor = GreekProcessing(text)
+        text = greek_processor.clean_text(text)
         terms: Dict[str, int] = {}
         chunks: List[str] = []
         if info.has_chunks:
             chunks = text.split(info.chunk_separator)
-            chunks = [procs.clean_chunk(c) for c in chunks if c]
+            chunks = [greek_processor.clean_chunk(c) for c in chunks if c]
             terms = cls.get_terms(chunks, chunk_sep)
         else:
             chunks = [text]
-            chunks = [procs.clean_chunk(c) for c in chunks if c]
+            chunks = [greek_processor.clean_chunk(c) for c in chunks if c]
             terms = cls.get_terms(chunks, chunk_sep)
         #
         text_obj = Text(
